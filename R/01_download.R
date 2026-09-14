@@ -180,7 +180,10 @@ if (file.exists(data_sources)) {
   s <- which(lines == "<!-- download-log:start -->")
   e <- which(lines == "<!-- download-log:end -->")
   if (length(s) == 1 && length(e) == 1 && e > s) {
-    lines <- c(lines[seq_len(s - 1)], log_block, lines[seq(e + 1, length(lines))])
+    # seq_len() rather than seq(e + 1, n): when the end marker is the last
+    # line, seq(n + 1, n) would count *backwards* and duplicate lines.
+    after <- lines[e + seq_len(length(lines) - e)]
+    lines <- c(lines[seq_len(s - 1)], log_block, after)
   } else {
     lines <- c(lines, "", "## Download log", "", log_block)
   }
