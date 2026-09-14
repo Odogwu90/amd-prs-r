@@ -47,3 +47,6 @@ Thumbs.db
 .vscode/
 
 **/*.quarto_ipynb
+
+# ---- personal learning scratch work (kept out of the public repo) ----
+/learn/
