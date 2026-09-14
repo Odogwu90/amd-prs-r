@@ -15,7 +15,14 @@
 #             ALL.chr10.phase3_shapeit2_mvncall_integrated_v5b.20130502.genotypes.vcf.gz (+ .tbi)
 #             integrated_call_samples_v3.20130502.ALL.panel
 #           data/raw/iamdgc/
-#             26691988-GCST003219-EFO_0001365-build37.f.tsv.gz
+#             26691988-GCST003219-EFO_0001365-build37.f.tsv.gz   (Catalog-formatted)
+#             Fritsche-26691988.txt.gz                           (author original; used
+#                                                                 by 04_prs.R because the
+#                                                                 formatted file loses the
+#                                                                 "-" direction sign)
+#             gcst003219_associations.json                       (GWAS Catalog API: the 52
+#                                                                 curated variants with
+#                                                                 reported odds ratios)
 #           data/raw/checksums.tsv        one row per file: url, date, md5, status
 #           docs/data_sources.md          the block between the
 #                                         <!-- download-log:start/end --> markers
@@ -59,6 +66,14 @@ kg_base <- "https://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502"
 gc_base <- paste0("https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/",
                   "GCST003001-GCST004000/GCST003219")
 
+# The GWAS Catalog REST API (v2) supplies the 52 curated associations of the
+# study (variant, reported odds ratio, p-value). It is a JSON document rather
+# than a file on the FTP, saved under a fixed local name; the Catalog itself
+# does not publish a checksum for API responses. Note: the API does not record
+# which allele the odds ratio refers to (effect_allele "?"); 04_prs.R resolves
+# that from the direction sign in the original author file.
+api_assoc <- "https://www.ebi.ac.uk/gwas/rest/api/v2/associations?accession_id=GCST003219&size=100"
+
 manifest <- tribble(
   ~dataset, ~dest_dir, ~file,                                                                          ~md5_expected,
   "1000G",  "1000G",   "ALL.chr1.phase3_shapeit2_mvncall_integrated_v5b.20130502.genotypes.vcf.gz",      "76f1d3fef27c6c3f451cdfc515250a0e",
@@ -66,12 +81,15 @@ manifest <- tribble(
   "1000G",  "1000G",   "ALL.chr10.phase3_shapeit2_mvncall_integrated_v5b.20130502.genotypes.vcf.gz",     "45814b06e651f8fb409364aa6d65257e",
   "1000G",  "1000G",   "ALL.chr10.phase3_shapeit2_mvncall_integrated_v5b.20130502.genotypes.vcf.gz.tbi", "266a7200332b971c741b1520e03bda80",
   "1000G",  "1000G",   "integrated_call_samples_v3.20130502.ALL.panel",                                   "7ee5675553088230530a7fe88c22f201",
-  "IAMDGC", "iamdgc",  "harmonised/26691988-GCST003219-EFO_0001365-build37.f.tsv.gz",                    NA_character_
+  "IAMDGC", "iamdgc",  "harmonised/26691988-GCST003219-EFO_0001365-build37.f.tsv.gz",                    NA_character_,
+  "IAMDGC", "iamdgc",  "Fritsche-26691988.txt.gz",                                                        NA_character_,
+  "IAMDGC", "iamdgc",  "gcst003219_associations.json",                                                    NA_character_
 ) |>
   mutate(
-    url  = if_else(dataset == "1000G",
-                   as.character(glue("{kg_base}/{file}")),
-                   as.character(glue("{gc_base}/{file}"))),
+    url  = case_when(
+      dataset == "1000G"                           ~ as.character(glue("{kg_base}/{file}")),
+      file == "gcst003219_associations.json"       ~ api_assoc,
+      TRUE                                         ~ as.character(glue("{gc_base}/{file}"))),
     dest = here("data", "raw", dest_dir, basename(file))
   )
 
@@ -135,9 +153,19 @@ fetch_one <- function(dataset, dest_dir, file, md5_expected, url, dest) {
   }
   md5 <- md5_of(part)
   if (!is.na(reference) && !identical(md5, reference)) {
-    unlink(part)
-    stop(glue("Checksum FAILED for {basename(dest)}\n",
-              "  expected {reference}\n  got      {md5}"))
+    if (official) {
+      unlink(part)
+      stop(glue("Checksum FAILED for {basename(dest)}\n",
+                "  expected {reference}\n  got      {md5}"))
+    }
+    # A locally recorded md5 is only a change detector: the source (e.g. an
+    # API response) may legitimately change. Keep the new file, record the
+    # new md5, and flag it in the log so the change is visible.
+    warning(glue("{basename(dest)}: content changed since first download ",
+                 "(recorded {reference}, now {md5}); keeping the new file."), call. = FALSE)
+    file.rename(part, dest)
+    return(row_result(dataset, file, url, dest, md5, "recorded (changed on re-download)",
+                      "redownloaded_changed"))
   }
   file.rename(part, dest)
   mins <- round(as.numeric(difftime(Sys.time(), t0, units = "mins")), 1)

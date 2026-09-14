@@ -19,4 +19,6 @@ Imports:
     glue,
     knitr,
     rmarkdown,
-    quarto
+    quarto,
+    R.utils,
+    jsonlite
