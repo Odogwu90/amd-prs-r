@@ -1,0 +1,8 @@
+# Quarto project file. Kept at the repo root (not in report/) so that code
+# chunks execute with the repository root as working directory; that makes R
+# source .Rprofile (renv + here) exactly as `Rscript R/0x_*.R` does.
+project:
+  type: default
+  execute-dir: project
+  render:
+    - report/report.qmd

@@ -1,0 +1,77 @@
+---
+title: "Ancestry portability of a polygenic risk score for age-related macular degeneration"
+subtitle: "IAMDGC 2016 summary statistics applied to 1000 Genomes Phase 3 (chr1 + chr10)"
+author: "Onyedikachi Martins Okpara"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    code-fold: true
+    embed-resources: true
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+::: {.callout-note}
+**Placeholder.** This report is a skeleton. Sections are filled in as each
+numbered script in `R/` is implemented. Nothing below is a result.
+:::
+
+## Environment check
+
+This chunk exists so that `quarto render` doubles as a smoke test: it confirms
+that the render runs from the repository root, that renv's project library is
+active, and that the PLINK binaries in `bin/` are callable.
+
+```{r}
+#| label: env-check
+library(here)
+
+plink1 <- here("bin", if (.Platform$OS.type == "windows") "plink.exe"  else "plink")
+plink2 <- here("bin", if (.Platform$OS.type == "windows") "plink2.exe" else "plink2")
+
+run_version <- function(exe) {
+  if (!file.exists(exe)) return(paste("not found:", exe))
+  paste(system2(exe, "--version", stdout = TRUE, stderr = TRUE), collapse = " ")
+}
+
+tibble::tibble(
+  item  = c("R", "Working directory", "here() root", "renv library active",
+            "PLINK 1.9", "PLINK 2"),
+  value = c(R.version.string, getwd(), here(),
+            as.character(startsWith(.libPaths()[1], here("renv"))),
+            run_version(plink1), run_version(plink2))
+) |>
+  knitr::kable()
+```
+
+## 1. Aim
+
+## 2. Data
+
+## 3. Quality control
+
+## 4. Population structure (PCA)
+
+## 5. Polygenic risk score construction
+
+## 6. Ancestry portability
+
+## 7. Simulated gene-environment illustration
+
+::: {.callout-warning}
+Everything in this section is **simulated** and is included only to illustrate
+how an interaction analysis would be set up.
+:::
+
+## 8. Limitations
+
+## Reproducibility
+
+```{r}
+#| label: session-info
+sessionInfo()
+```

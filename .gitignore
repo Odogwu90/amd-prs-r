@@ -1,0 +1,46 @@
+# ---- Data: never commit raw or processed data ----
+# Ignore the *contents* of data/ (not the directory itself) so the .gitkeep
+# placeholders can be tracked; git cannot re-include files under an ignored dir.
+data/*
+!data/raw/
+data/raw/*
+!data/raw/.gitkeep
+!data/processed/
+data/processed/*
+!data/processed/.gitkeep
+
+# ---- Local tool binaries (downloaded by user, see README) ----
+bin/*
+!bin/.gitkeep
+!bin/README.md
+
+# ---- renv: keep renv.lock and the activation script, drop the library ----
+renv/library/
+renv/local/
+renv/cellar/
+renv/lock/
+renv/python/
+renv/sandbox/
+renv/staging/
+
+# ---- R session artefacts ----
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj.user/
+.Rproj.user/
+
+# ---- Quarto / knitr render outputs ----
+report/*_files/
+report/*.html
+report/*.pdf
+report/*.docx
+report/.quarto/
+/.quarto/
+*_cache/
+/_freeze/
+
+# ---- OS / editor ----
+.DS_Store
+Thumbs.db
+.vscode/
