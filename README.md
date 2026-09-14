@@ -84,17 +84,17 @@ comment stating its purpose, inputs and outputs.
 ## Analysis decisions
 
 Every analytical choice, its rationale, and who made it is logged in
-[docs/decisions.md](docs/decisions.md). Entries marked **PENDING** are
-scientific decisions (QC thresholds, number of PCs, PRS method) still to be
-made by the analyst before the corresponding script is implemented.
+[docs/decisions.md](docs/decisions.md), together with the auto-generated
+outcome tables each script writes (QC counts, PCA, PRS construction,
+portability).
 
 ## Status
 
-Environment and repository skeleton only. No analysis has been run yet.
+Steps 01 to 05 (download, QC, PCA, PRS construction, portability) are
+implemented and run. The simulated gene-environment illustration (06) and the
+Quarto report are in progress.
 
-## Licence and AI assistance
+## Licence
 
 Code is released under the MIT licence (see [LICENSE](LICENSE)). Data remain
-under their original terms. Environment set-up and scaffolding were done with
-help from an AI coding assistant (Claude); all scientific decisions are the
-author's.
+under their original terms.
