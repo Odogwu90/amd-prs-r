@@ -88,11 +88,35 @@ Every analytical choice, its rationale, and who made it is logged in
 outcome tables each script writes (QC counts, PCA, PRS construction,
 portability).
 
+## Key results
+
+Full results, tables and figures are in the rendered report
+(`quarto render` produces `report/report.html`); the numbers below are from
+`docs/decisions.md`.
+
+- **QC.** 10,460,313 chr1 + chr10 records became 1,552,816 biallelic SNPs with
+  MAF >= 0.01; 20 of 2,504 samples were removed as second-degree relatives.
+- **Ancestry.** 10 PCs from 92,108 LD-pruned variants; PC1 (7.6 %) separates
+  AFR, PC2 (2.7 %) separates EAS from EUR.
+- **Scores.** The public IAMDGC file has no effect sizes, so the
+  clumping-and-thresholding weights are approximate log-odds derived from the
+  signed z-scores and EUR allele frequencies (validated against the five
+  reported odds ratios, ratio 0.83 to 1.09). The published-variant score uses
+  the five of ten curated chr1/chr10 variants that survive QC.
+- **Portability (primary aim).** Every non-European group scores below EUR on
+  average, and the gap widens with more variants: with the 102-variant score
+  at p < 5e-8 the AFR mean sits 0.88 EUR SD below EUR and its spread is 0.63
+  of the EUR spread, while the five-variant score shifts by 0.2 to 0.3 SD.
+  The shift decomposes exactly into effect-allele frequency differences,
+  dominated by CFH/CFHR-region alleles.
+- **Simulation.** A labelled simulation recovers the generating odds ratios
+  and shows that a 1.3 interaction is only borderline detectable at n = 2,484.
+
+![Mean score shift from EUR by super-population](report/figures/05_mean_shift.png)
+
 ## Status
 
-Steps 01 to 05 (download, QC, PCA, PRS construction, portability) are
-implemented and run. The simulated gene-environment illustration (06) and the
-Quarto report are in progress.
+Complete: all six scripts run end to end and the report renders.
 
 ## Licence
 

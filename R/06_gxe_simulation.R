@@ -137,8 +137,8 @@ fig <- ggplot(grid, aes(prs, p_hat, colour = smoking, fill = smoking)) +
        y = "Simulated probability of AMD",
        title = "ILLUSTRATIVE SIMULATION - no real phenotype data",
        subtitle = glue("Outcome simulated with OR {OR_PRS} per SD (PRS), {OR_SMOKING} (smoking), ",
-                       "{OR_INTERACT} (interaction)
-Solid = fitted model, dashed = generating model, band = 95% CI")) +
+                       "{OR_INTERACT} (interaction)\n",
+                       "Solid = fitted model, dashed = generating model, band = 95% CI")) +
   theme_minimal(base_size = 11) +
   theme(panel.grid.minor = element_blank(), legend.position = "bottom",
         plot.title = element_text(face = "bold", colour = "#b3261e"))
