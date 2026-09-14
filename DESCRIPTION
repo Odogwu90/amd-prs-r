@@ -1,0 +1,22 @@
+Package: amdprsr
+Type: Project
+Title: Polygenic risk score for AMD and its ancestry portability in 1000 Genomes
+Version: 0.0.1
+Description: Learning project. Builds a PRS for age-related macular degeneration
+    from IAMDGC 2016 GWAS summary statistics and evaluates it across the five
+    1000 Genomes Phase 3 super-populations. This file is the package manifest
+    that renv snapshots (snapshot.type = "explicit"); it is not an R package.
+License: MIT
+Encoding: UTF-8
+Imports:
+    tidyverse,
+    data.table,
+    bigsnpr,
+    bigstatsr,
+    ggplot2,
+    patchwork,
+    here,
+    glue,
+    knitr,
+    rmarkdown,
+    quarto
