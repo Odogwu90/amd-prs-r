@@ -4,5 +4,7 @@
 project:
   type: default
   execute-dir: project
+  output-dir: _site          # rendered output goes here (gitignored); this is
+                             # what `quarto publish gh-pages` uploads
   render:
     - report/report.qmd

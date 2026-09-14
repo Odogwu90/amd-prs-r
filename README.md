@@ -56,7 +56,7 @@ Rscript -e "renv::restore()"
 for f in R/0*.R; do Rscript "$f" || break; done     # bash
 # Get-ChildItem R\0*.R | ForEach-Object { Rscript $_.FullName }   # PowerShell
 
-# 3. Render the report to report/report.html
+# 3. Render the report to _site/report/report.html
 quarto render
 ```
 
@@ -66,7 +66,7 @@ quarto render
 amd-prs-r/
   R/               01_download.R  02_qc.R  03_pca.R  04_prs.R
                    05_portability.R  06_gxe_simulation.R
-  report/          report.qmd (Quarto source; rendered HTML is gitignored)
+  report/          report.qmd and figures/ (rendered HTML goes to _site/, gitignored)
   docs/            data_sources.md, decisions.md
   data/raw/        downloaded inputs            (gitignored)
   data/processed/  outputs of the scripts       (gitignored)
@@ -90,8 +90,9 @@ portability).
 
 ## Key results
 
-Full results, tables and figures are in the rendered report
-(`quarto render` produces `report/report.html`); the numbers below are from
+Full results, tables and figures are in the rendered report, published at
+<https://odogwu90.github.io/amd-prs-r/report/report.html> (`quarto render`
+rebuilds it locally into `_site/`); the numbers below are from
 `docs/decisions.md`.
 
 - **QC.** 10,460,313 chr1 + chr10 records became 1,552,816 biallelic SNPs with

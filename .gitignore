@@ -37,6 +37,7 @@ report/*.pdf
 report/*.docx
 report/.quarto/
 /.quarto/
+/_site/
 *_cache/
 /_freeze/
 
