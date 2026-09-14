@@ -51,7 +51,7 @@ first inspection in `04_prs.R`): `variant_id`, `p_value`, `chromosome`,
 | Tool | Version installed | Source |
 |---|---|---|
 | PLINK 1.9 | v1.9.0-rc2 64-bit (13 Sep 2026) | <https://www.cog-genomics.org/plink/1.9/> -> `plink_win64_20260913.zip` |
-| PLINK 2 | v2.0.0-a.7.5 64-bit (10 Sep 2026) | <https://www.cog-genomics.org/plink/2.0/> -> `alpha7/plink2_win64_20260910.zip` |
+| PLINK 2 | v2.0.0-a.6.36 64-bit (10 Sep 2026) | <https://www.cog-genomics.org/plink/2.0/> -> `alpha6/plink2_win64_20260910.zip` (alpha 7.5 segfaults on the unfiltered chr1 VCF import; see D-13 in `decisions.md`) |
 
 See `bin/README.md` for how to re-download them on a fresh clone.
 

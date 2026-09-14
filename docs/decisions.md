@@ -120,6 +120,12 @@ prefixed `SIMULATED_`.
 * KING kinship is estimated on chr1 + chr10 only (about 14 % of the autosomal
   genome). This is enough to detect second-degree relatives among 2,504
   samples but the estimates are noisier than a genome-wide KING run.
+* **PLINK 2 alpha 6.36 instead of alpha 7.5.** The alpha 7.5 build (10 Sep
+  2026) segfaulted about 131k variants into the unfiltered chr1 VCF import
+  (reproducible with 1 or 3 threads; the file's md5 is verified). It succeeds
+  only if biallelic SNPs are filtered at import, which would hide the baseline
+  count. Alpha 6.36 (same date, maintenance line) imports the full file
+  cleanly and supports every flag used here, so `bin/plink2.exe` is alpha 6.36.
 
 ### QC outcome (written by `R/02_qc.R`)
 
