@@ -44,3 +44,5 @@ report/.quarto/
 .DS_Store
 Thumbs.db
 .vscode/
+
+**/*.quarto_ipynb
