@@ -27,6 +27,7 @@ renv/staging/
 .Rhistory
 .RData
 .Ruserdata
+Rplots.pdf
 *.Rproj.user/
 .Rproj.user/
 
