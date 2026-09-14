@@ -91,7 +91,7 @@ portability).
 ## Key results
 
 Full results, tables and figures are in the rendered report, published at
-<https://odogwu90.github.io/amd-prs-r/report/report.html> (`quarto render`
+<https://odogwu90.github.io/amd-prs-r/> (`quarto render`
 rebuilds it locally into `_site/`); the numbers below are from
 `docs/decisions.md`.
 
