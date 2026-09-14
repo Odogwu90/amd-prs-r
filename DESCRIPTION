@@ -22,4 +22,6 @@ Imports:
     quarto,
     R.utils,
     jsonlite,
-    ggrepel
+    ggrepel,
+    broom,
+    scales
