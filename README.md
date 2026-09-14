@@ -19,9 +19,17 @@ an assessment of *distribution shift*, not predictive accuracy.
 - Principal component analysis for genetic ancestry with bigsnpr.
 - A clearly labelled **simulated** gene-environment interaction illustration.
 
-Scope is restricted to chromosomes 1 and 10 (which carry the two largest AMD
-loci, *CFH* and *ARMS2/HTRA1*) to keep the data around 2 GB. The resulting
-score is therefore partial and not comparable to published genome-wide scores.
+## Scope and limitations
+
+The score is **partial**: only chromosomes 1 and 10 are used, chosen because
+they carry the *CFH* and *ARMS2/HTRA1* regions, which together account for
+roughly half of the known AMD genetic signal. It is therefore not comparable
+to published genome-wide AMD scores, and absolute risk cannot be derived from
+it. The 1000 Genomes panel has **no phenotypes**, so no association between
+the score and AMD, and no gene-environment effect, is tested on real data;
+the ancestry comparison describes how the score's distribution and variant
+coverage shift between populations, and the gene-environment section is an
+explicitly labelled simulation.
 
 ## Data sources
 

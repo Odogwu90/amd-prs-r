@@ -59,31 +59,70 @@ means: how the PRS mean/variance, effect-allele frequencies and variant
 coverage differ across super-populations, not how well the score predicts
 disease outside Europeans. This limitation is stated in the report.
 
-### PENDING | D-08 | analyst | Variant QC thresholds
+### 2026-09-14 | D-08 | final (analyst) | Variant QC
 
-To decide in `02_qc.R`: minimum MAF, maximum per-variant missingness, HWE
-p-value threshold (and whether HWE is tested within populations or overall),
-biallelic-SNP restriction, and exclusion of A/T, C/G ambiguous SNPs.
+Applied in `02_qc.R`, in this order, on the pooled 2,504-sample panel:
 
-### PENDING | D-09 | analyst | Sample QC
+1. Biallelic SNPs only (`--snps-only just-acgt --max-alleles 2`): indels,
+   structural variants and multi-allelic sites are removed.
+2. Minor allele frequency >= 0.01 (`--maf 0.01`), computed in the pooled sample.
+3. Per-variant missingness < 0.02 (`--geno 0.02`).
+4. Strand-ambiguous A/T and C/G SNPs are **not** removed here; they are removed
+   at the summary-statistics matching step in `04_prs.R`, where strand
+   orientation actually matters.
+5. **No Hardy-Weinberg filter** on the pooled sample: the panel mixes five
+   super-populations, so departures from HWE are expected from population
+   structure alone (Wahlund effect) and would remove informative variants. If
+   an HWE filter is ever applied, it is applied within super-population only.
 
-To decide: per-sample missingness threshold; whether to keep all 2,504 or drop
-related/duplicate samples (Phase 3 is nominally unrelated); sex checks are not
-possible on chr1/chr10 alone.
+### 2026-09-14 | D-09 | final (analyst) | Sample QC
 
-### PENDING | D-10 | analyst | Number of PCs to retain
+Use all 2,504 samples of the Phase 3 integrated panel as the starting point.
+Remove relatedness with PLINK 2 `--king-cutoff 0.0884` (KING-robust kinship
+above the second-degree threshold; one sample of each flagged pair is dropped
+by PLINK's greedy algorithm). No sex check: chrX is not in scope, so a sex
+check is not possible and the 1000 Genomes panel sex is taken as given. No
+per-sample missingness filter is needed because Phase 3 genotypes are
+fully called (see the QC outcome below).
 
-To decide after inspecting the scree plot from `03_pca.R`; also whether PCs are
-computed on all samples jointly or within super-population.
+### 2026-09-14 | D-10 | final (analyst) | Principal components
 
-### PENDING | D-11 | analyst | PRS construction method
+Compute PCs with `bigsnpr::snp_autoSVD` on LD-pruned variants (the function
+removes long-range LD regions automatically and iterates until no outlier
+loadings remain). Keep 10 PCs. Plot PC1-PC4 coloured by super-population.
 
-Options: (a) the published IAMDGC 52-variant score restricted to chr1/chr10;
-(b) clumping + p-value thresholding at one or more thresholds; (c) LDpred2-auto
-via bigsnpr. Also: which LD reference (EUR subset of 1000 Genomes is the
-natural choice since the GWAS is European).
+### 2026-09-14 | D-11 | final (analyst) | PRS construction: two scores side by side
 
-### PENDING | D-12 | analyst | Simulation design for the G x E illustration
+(a) **Published-variant score**: the genome-wide-significant variants reported
+by Fritsche et al. 2016 that lie on chr1 and chr10, weighted by the reported
+log-odds. (b) **Clumping + thresholding**: `bigsnpr::snp_clumping` followed
+by scoring at p < 5e-8, 1e-5, 1e-3 and 0.05. Both scores are standardised
+(mean 0, SD 1) within the full 2,504-sample panel, so per-population means are
+read as shifts relative to the pooled sample.
 
-To decide: exposure prevalence, main-effect and interaction effect sizes,
-sample size, and seed. All outputs prefixed `SIMULATED_`.
+### 2026-09-14 | D-12 | final (analyst) | Gene-environment simulation design
+
+Fixed seed. Simulated AMD liability = PRS + smoking + PRS x smoking, where
+smoking is binary with 20 % prevalence. The report section is titled
+"Illustrative simulation - no real phenotype data" and every output file is
+prefixed `SIMULATED_`.
+
+### 2026-09-14 | D-13 | made (assistant, technical; review welcome) | Variant identifiers and QC mechanics
+
+* Variant IDs are rewritten as `chr:pos:ref:alt` (`--set-all-var-ids`) so every
+  variant has a unique, self-describing ID; the handful of exact duplicates in
+  the 1000 Genomes VCF are then removed with `--rm-dup exclude-all`. rsIDs are
+  recovered from the summary-statistics file at the matching step.
+* Filters are applied one at a time to separate PLINK 2 output files so that
+  the count after each step can be logged (`data/processed/qc_log.csv`).
+  Intermediate files are deleted at the end; PLINK logs are kept in
+  `data/processed/logs/02_qc/`.
+* KING kinship is estimated on chr1 + chr10 only (about 14 % of the autosomal
+  genome). This is enough to detect second-degree relatives among 2,504
+  samples but the estimates are noisier than a genome-wide KING run.
+
+### QC outcome (written by `R/02_qc.R`)
+
+<!-- qc-summary:start -->
+_Not yet run. Execute `Rscript R/02_qc.R` to populate this block._
+<!-- qc-summary:end -->
